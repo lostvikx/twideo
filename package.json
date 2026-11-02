@@ -1,0 +1,10 @@
+{
+  "name": "twideo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A static X/Twitter video downloader.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

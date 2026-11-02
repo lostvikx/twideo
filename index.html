@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#08090b" />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'; frame-src 'none'; img-src 'self' https://pbs.twimg.com; script-src 'self'; style-src 'self'; font-src 'self'; connect-src https://api.fxtwitter.com"
+    />
+    <title>Twideo — Download X (Twitter) videos in any resolution</title>
+    <meta
+      name="description"
+      content="Paste an X (Twitter) post link and get direct MP4 links for every available resolution, from 270p to 4K. Free, fast, and no account needed."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Twideo" />
+    <meta property="og:title" content="Twideo — Download X videos in any resolution" />
+    <meta
+      property="og:description"
+      content="Paste an X post link, pick a resolution, and open the original MP4 on twimg."
+    />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Twideo — Download X videos in any resolution" />
+    <meta
+      name="twitter:description"
+      content="Paste an X post link, pick a resolution, and open the original MP4 on twimg."
+    />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <svg class="svg-sprite" aria-hidden="true">
+      <defs>
+        <symbol id="icon-arrow-up-right" viewBox="0 0 24 24">
+          <path d="M7 17 17 7" />
+          <path d="M8 7h9v9" />
+        </symbol>
+        <symbol id="icon-clipboard" viewBox="0 0 24 24">
+          <path d="M9 4H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2" />
+          <rect x="9" y="2" width="6" height="4" rx="1" />
+        </symbol>
+        <symbol id="icon-info" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v5" />
+          <path d="M12 8h.01" />
+        </symbol>
+        <symbol id="icon-play" viewBox="0 0 24 24">
+          <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10-6.5a1 1 0 0 0 0-1.72l-10-6.5A1 1 0 0 0 8 5.5Z" />
+        </symbol>
+        <symbol id="icon-chevron-down" viewBox="0 0 24 24">
+          <path d="m6 9 6 6 6-6" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="./" aria-label="Twideo home">
+          <img class="brand-mark" src="./favicon.svg" alt="" width="30" height="30" />
+          <span class="brand-name">Twideo</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="#how-it-works">How it works</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero narrow" aria-labelledby="hero-title">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>X / Twitter video downloader</p>
+        <h1 id="hero-title">
+          Download X videos in <span class="gradient-text">the resolution you want.</span>
+        </h1>
+        <p class="lede">
+          Paste a post link. Pick a resolution. Twideo sends you straight to the original MP4 on
+          twimg.
+        </p>
+
+        <form class="lookup" id="lookup-form" novalidate>
+          <div class="lookup-field">
+            <label class="sr-only" for="tweet-input">X or Twitter post link or tweet ID</label>
+            <input
+              id="tweet-input"
+              name="tweet"
+              type="text"
+              inputmode="url"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+              enterkeyhint="go"
+              placeholder="https://x.com/user/status/1234567890"
+              aria-describedby="input-hint"
+            />
+            <button class="paste-btn" id="paste-btn" type="button" aria-label="Paste from clipboard">
+              <svg class="icon" aria-hidden="true" focusable="false">
+                <use href="#icon-clipboard"></use>
+              </svg>
+              <span>Paste</span>
+            </button>
+          </div>
+          <button class="primary-btn" id="submit-btn" type="submit">
+            <span class="btn-label">Get links</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+        </form>
+        <p class="input-hint" id="input-hint">
+          Works with x.com and twitter.com links, or a numeric post ID.
+        </p>
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+
+        <section class="recent" id="recent" aria-labelledby="recent-title" hidden>
+          <div class="recent-head">
+            <h2 id="recent-title">Recent</h2>
+            <button class="text-btn" id="clear-recent" type="button">Clear</button>
+          </div>
+          <div class="recent-list" id="recent-list"></div>
+        </section>
+      </section>
+
+      <section class="results narrow" id="results" aria-labelledby="results-title" hidden>
+        <div class="results-head">
+          <div>
+            <p class="eyebrow">Direct from twimg</p>
+            <h2 id="results-title">Choose a resolution</h2>
+          </div>
+          <p class="results-count" id="results-count"></p>
+        </div>
+        <div id="post-list"></div>
+      </section>
+
+      <section class="section narrow" id="how-it-works" aria-labelledby="how-title">
+        <div class="section-head">
+          <p class="eyebrow">Three steps</p>
+          <h2 id="how-title">From post to MP4.</h2>
+          <p>No account. No extension. No files stored here.</p>
+        </div>
+        <ol class="steps">
+          <li class="step">
+            <span class="step-num">01</span>
+            <h3>Copy the post link</h3>
+            <p>Open the post on X and copy its link. A raw numeric post ID works too.</p>
+          </li>
+          <li class="step">
+            <span class="step-num">02</span>
+            <h3>Get the links</h3>
+            <p>
+              Paste it above and hit Get links. Twideo reads the public post metadata and lists
+              every MP4 X exposes.
+            </p>
+          </li>
+          <li class="step">
+            <span class="step-num">03</span>
+            <h3>Pick a resolution</h3>
+            <p>
+              The raw file opens on twimg in a new tab. Save it from the video player's menu or with
+              right-click → Save video.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section narrow" id="faq" aria-labelledby="faq-title">
+        <div class="section-head">
+          <p class="eyebrow">Good to know</p>
+          <h2 id="faq-title">Questions, answered.</h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>
+              Is Twideo free?
+              <svg class="icon faq-icon" aria-hidden="true" focusable="false">
+                <use href="#icon-chevron-down"></use>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Yes. No account, no extension, and no ads. Twideo is a static page that reads public
+                post metadata through the FxTwitter API.
+              </p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              Why does the video open instead of downloading?
+              <svg class="icon faq-icon" aria-hidden="true" focusable="false">
+                <use href="#icon-chevron-down"></use>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                The links point directly to video.twimg.com, X's video CDN. Browsers play MP4 files
+                inline instead of opening a save dialog. Use the player's menu or right-click →
+                Save video as… On mobile, use the share or save option.
+              </p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              Which resolutions are available?
+              <svg class="icon faq-icon" aria-hidden="true" focusable="false">
+                <use href="#icon-chevron-down"></use>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Only the versions X exposes for that post, usually 270p through 4K. Twideo lists
+                every MP4 variant, highest first. Vertical videos are labeled by their short side,
+                with exact dimensions shown next to each option.
+              </p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              Does Twideo host or store videos?
+              <svg class="icon faq-icon" aria-hidden="true" focusable="false">
+                <use href="#icon-chevron-down"></use>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                No. Every file is served by twimg directly to your browser. Twideo has no backend
+                and stores no media.
+              </p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              Does it work with private or age-restricted posts?
+              <svg class="icon faq-icon" aria-hidden="true" focusable="false">
+                <use href="#icon-chevron-down"></use>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                No. Only public posts with native videos or GIFs. Deleted, protected, or
+                login-gated posts will fail.
+              </p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              What data does Twideo store?
+              <svg class="icon faq-icon" aria-hidden="true" focusable="false">
+                <use href="#icon-chevron-down"></use>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Recent lookups — post ID, handle, and video count — stay in your browser's local
+                storage so you can reopen them. There are no accounts, cookies, or analytics. The
+                post ID is sent from your browser to api.fxtwitter.com to fetch metadata.
+              </p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>
+              Is Twideo affiliated with X?
+              <svg class="icon faq-icon" aria-hidden="true" focusable="false">
+                <use href="#icon-chevron-down"></use>
+              </svg>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                No. X and Twitter are trademarks of X Corp. Twideo is an independent tool. Respect
+                copyright and X's terms, and only download content you have the right to save.
+              </p>
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a class="brand" href="./" aria-label="Twideo home">
+            <img class="brand-mark" src="./favicon.svg" alt="" width="28" height="28" />
+            <span class="brand-name">Twideo</span>
+          </a>
+          <p class="footer-note">
+            A small, ad-free tool for saving public X videos. Twideo doesn't host any media — every
+            file is served directly by twimg. Metadata via FxTwitter.
+          </p>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="#how-it-works">How it works</a>
+          <a href="#faq">FAQ</a>
+          <a href="https://fxtwitter.com" target="_blank" rel="noopener noreferrer">
+            FxTwitter
+            <svg class="icon" aria-hidden="true" focusable="false">
+              <use href="#icon-arrow-up-right"></use>
+            </svg>
+          </a>
+        </nav>
+        <div class="footer-legal">
+          <p>Not affiliated with X Corp. Only download content you have the right to save.</p>
+          <p>&copy; <span id="year"></span> Twideo</p>
+        </div>
+      </div>
+    </footer>
+
+    <template id="post-template">
+      <article class="post-card">
+        <header class="post-head">
+          <div class="author">
+            <span class="avatar-wrap">
+              <img class="avatar" alt="" width="44" height="44" loading="lazy" decoding="async" />
+              <span class="avatar-fallback" aria-hidden="true"></span>
+            </span>
+            <div class="author-text">
+              <span class="author-name"></span>
+              <span class="author-handle"></span>
+            </div>
+          </div>
+          <a
+            class="post-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View on X (opens in a new tab)"
+          >
+            <span>View on X</span>
+            <svg class="icon" aria-hidden="true" focusable="false">
+              <use href="#icon-arrow-up-right"></use>
+            </svg>
+          </a>
+        </header>
+        <p class="post-text"></p>
+        <div class="video-list"></div>
+        <footer class="post-tip">
+          <p class="tip-text">
+            <svg class="icon" aria-hidden="true" focusable="false">
+              <use href="#icon-info"></use>
+            </svg>
+            <span>Links open on twimg in a new tab. Use the player menu or right-click → Save video.</span>
+          </p>
+          <p class="estimate-note">Sizes are estimated from bitrate and duration.</p>
+        </footer>
+      </article>
+    </template>
+
+    <template id="video-template">
+      <section class="video-block">
+        <div class="video-top">
+          <div class="thumb-wrap">
+            <img class="thumb" alt="" loading="lazy" decoding="async" />
+            <div class="thumb-placeholder" aria-hidden="true">
+              <svg class="icon icon-play" focusable="false">
+                <use href="#icon-play"></use>
+              </svg>
+            </div>
+            <span class="duration"></span>
+            <span class="media-badge"></span>
+          </div>
+          <div class="video-meta">
+            <h3 class="video-title"></h3>
+            <p class="video-sub"></p>
+          </div>
+        </div>
+        <div class="variant-list"></div>
+      </section>
+    </template>
+
+    <template id="variant-template">
+      <a class="variant" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">
+        <span class="variant-main">
+          <span class="variant-res"></span>
+          <span class="variant-dims"></span>
+        </span>
+        <span class="variant-side">
+          <span class="variant-size"></span>
+          <span class="best-badge" hidden>Best</span>
+          <svg class="icon" aria-hidden="true" focusable="false">
+            <use href="#icon-arrow-up-right"></use>
+          </svg>
+        </span>
+      </a>
+    </template>
+
+    <template id="recent-template">
+      <button class="recent-chip" type="button">
+        <span class="recent-handle"></span>
+        <span class="recent-meta"></span>
+      </button>
+    </template>
+  </body>
+</html>
