@@ -13,7 +13,7 @@ const REQUEST_TIMEOUT = 15000;
 
 const form = document.querySelector('#lookup-form');
 const input = document.querySelector('#tweet-input');
-const pasteBtn = document.querySelector('#paste-btn');
+const clearBtn = document.querySelector('#clear-btn');
 const submitBtn = document.querySelector('#submit-btn');
 const statusEl = document.querySelector('#status');
 const resultsEl = document.querySelector('#results');
@@ -501,28 +501,10 @@ async function handleSubmit(event) {
   await lookup(parsed.id);
 }
 
-async function handlePaste() {
-  if (!navigator.clipboard?.readText) {
-    showStatus('Clipboard access is not available. Paste manually with Ctrl+V (⌘V on Mac).');
-    input.focus();
-    return;
-  }
-
-  try {
-    const text = await navigator.clipboard.readText();
-    if (!text.trim()) {
-      showStatus('Clipboard is empty. Copy a post link first.');
-      input.focus();
-      return;
-    }
-
-    input.value = text.trim();
-    clearStatus();
-    input.focus();
-  } catch {
-    showStatus('Clipboard access was blocked. Paste manually with Ctrl+V (⌘V on Mac).');
-    input.focus();
-  }
+function handleClear() {
+  input.value = '';
+  clearStatus();
+  input.focus();
 }
 
 yearEl.textContent = String(new Date().getFullYear());
@@ -530,7 +512,7 @@ loadRecent();
 renderRecent();
 
 form.addEventListener('submit', handleSubmit);
-pasteBtn.addEventListener('click', handlePaste);
+clearBtn.addEventListener('click', handleClear);
 clearRecentBtn.addEventListener('click', clearRecent);
 
 input.addEventListener('input', () => {

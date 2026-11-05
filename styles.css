@@ -287,7 +287,7 @@ img {
   box-shadow: 0 0 0 4px rgba(251, 113, 133, 0.1);
 }
 
-.paste-btn {
+.clear-btn {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -311,7 +311,7 @@ img {
     border-color 180ms ease;
 }
 
-.paste-btn:hover {
+.clear-btn:hover {
   border-color: var(--border);
   background: var(--surface-2);
   color: var(--text);
@@ -1118,12 +1118,12 @@ img {
     padding-right: 54px;
   }
 
-  .paste-btn {
+  .clear-btn {
     width: 42px;
     padding: 0;
   }
 
-  .paste-btn span {
+  .clear-btn span {
     display: none;
   }
 

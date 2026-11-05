@@ -11,7 +11,7 @@ Twideo is intentionally lightweight: no framework, no build step, no backend, no
 - Lists every MP4 resolution X exposes, highest first
 - Shows exact dimensions, estimated file size, duration, thumbnail, author, and post text
 - Supports posts with multiple videos and GIFs (served as MP4)
-- One-click clipboard paste
+- One-click input clearing
 - Recent lookups saved locally in the browser
 - Responsive dark UI, keyboard-friendly, reduced-motion support
 
@@ -63,7 +63,7 @@ All asset paths are relative, so the site works from a project subpath. `.nojeky
 index.html          Page structure and templates
 styles.css          Dark theme and responsive layout
 lib.js              Input parsing, API normalization, formatting
-app.js              API requests, DOM rendering, clipboard, recent lookups
+app.js              API requests, DOM rendering, input clearing, recent lookups
 tests/lib.test.js   Unit tests for lib.js
 favicon.svg         Logo and favicon
 package.json        Test script only; no dependencies
