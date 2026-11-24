@@ -2,7 +2,7 @@
 
 A small, static X/Twitter video downloader. Paste a post link, choose a resolution, and open the original MP4 on `video.twimg.com`.
 
-Twideo is intentionally lightweight: no framework, no build step, no backend, no API key, and no analytics.
+Twideo ships as a static page: plain HTML, CSS, and JavaScript, with no framework, build step, backend, API key, or analytics.
 
 ## Features
 
@@ -72,15 +72,15 @@ package.json        Test script only; no dependencies
 
 ## Known limitations
 
-- **The video player opens, not a save dialog.** Links point directly to twimg, and browsers play MP4 files inline. The page explains how to save the file from the player. Forcing a download would require a backend or a client-side blob proxy.
+- **The video player opens instead of a save dialog.** Links point directly to twimg, and browsers play MP4 files inline. The page explains how to save the file from the player. Forcing a download would require a backend or a client-side blob proxy.
 - **FxTwitter is a third-party dependency.** If it is unavailable, rate-limited, or changes CORS behavior, lookups fail with an error message. The API call is isolated in `app.js` so it can be replaced later.
 - **No `t.co` short-link resolution.** The full `x.com`/`twitter.com` URL is required.
 - **Public posts only.** Deleted, protected, and age-restricted posts are not supported.
 - **No HLS downloads.** `.m3u8` playlists are hidden; only MP4 variants are listed.
-- **Sizes are estimates.** They are calculated from bitrate × duration, not from the actual file size.
+- **Sizes are estimates.** Twideo estimates sizes from bitrate × duration instead of checking the real file size.
 
 ## Privacy and legal
 
-Twideo has no backend, cookies, or analytics. Post metadata is fetched directly from FxTwitter in the browser; recent lookup summaries (post ID, handle, and video count) stay in `localStorage`. Media is served directly by twimg when a link is clicked.
+Twideo has no backend, cookies, or analytics. Your browser fetches post metadata directly from FxTwitter; recent lookup summaries (post ID, handle, and video count) stay in `localStorage`. twimg serves the media directly when you click a link.
 
 Twideo is not affiliated with X Corp. X and Twitter are trademarks of X Corp. Only download content you have the right to save, and respect copyright and X's terms.
